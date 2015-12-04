@@ -17,7 +17,7 @@ c.include?(unit: '#456')                    => true
 c.include?(unit: '#456', location: 'THERE') => false
 c.include?(unit: '#123', quantity: 6)       => true
 
-# 
+# Sometimes you need a big fat Array.
 c.locations               => ["HERE", "HERE", "HERE", "THERE", "THERE", "THERE", "THERE", "THERE"] 
 c.locations(unit: '#123') => ["HERE", "HERE", "THERE", "THERE", "THERE", "THERE", "THERE"] 
 
