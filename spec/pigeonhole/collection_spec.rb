@@ -89,21 +89,33 @@ describe Pigeonhole::Collection do
     end
   end
 
-  describe '#units' do
-    subject { described_class.new(complex_creation_array) }
-
-    it 'should count all entries for unit across locations' do
-      result = subject.locations(unit: unit)
-      expect(result).to match_array(Array.new(quantity, location) + Array.new(location_b_unit_a, location_b))
-    end
-  end
-
   describe '#locations' do
     subject { described_class.new(complex_creation_array) }
 
-    it 'should count all units at locations' do
-      result = subject.units(location: location)
-      expect(result).to match_array(Array.new(quantity, unit) + Array.new(location_a_unit_b, unit_b))
+    it 'count all locations' do
+      expect(subject.locations).to eq(complex_creation_array.flat_map { |a| [a[0]] * a[2] })
+    end
+
+    context 'with argument' do
+      it 'should count all entries for unit across locations' do
+        result = subject.locations(unit: unit)
+        expect(result).to match_array(Array.new(quantity, location) + Array.new(location_b_unit_a, location_b))
+      end
+    end
+  end
+
+  describe '#units' do
+    subject { described_class.new(complex_creation_array) }
+
+    it 'should count all units' do
+      expect(subject.units).to eq(complex_creation_array.flat_map { |a| [a[1]] * a[2] })
+    end
+
+    context 'with argument' do
+      it 'should count all units at locations' do
+        result = subject.units(location: location)
+        expect(result).to match_array(Array.new(quantity, unit) + Array.new(location_a_unit_b, unit_b))
+      end
     end
   end
 

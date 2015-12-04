@@ -49,17 +49,19 @@ module Pigeonhole
           Array.new(unit_hash[unit], location)
         end
       else
-        locations_to_units.keys
+        locations_to_units.flat_map do |location, unit_hash|
+          unit_hash.flat_map { |unit, qty| Array.new(qty, location) }
+        end
       end
     end
 
     def units(location: nil)
-      if location
-        locations_to_units[location].flat_map do |unit, qty|
-          Array.new(qty, unit)
-        end
+      units_to_sum = if location
+        locations_to_units[location].flat_map { |unit, qty| Array.new(qty, unit) }
       else
-        locations_to_units.values.flat_map(&:keys)
+        locations_to_units.flat_map do|location, unit_hash|
+          unit_hash.flat_map { |unit, qty| Array.new(qty, unit) }
+        end
       end
     end
 
