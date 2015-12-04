@@ -43,39 +43,40 @@ module Pigeonhole
       sum(quantities(location, unit))
     end
 
-    def include?(location: nil, unit: nil, quantity: 1)
-      raise ArgumentError.new("Either location or unit must be present") if location.nil? && unit.nil?
-
-      quantity(location: location, unit: unit) >= quantity
-    end
-
-    def unit_locations(unit:)
-      locations_to_units.flat_map do |location, unit_hash|
-        Array.new(unit_hash[unit], location)
+    def locations(unit: nil)
+      if unit
+        locations_to_units.flat_map do |location, unit_hash|
+          Array.new(unit_hash[unit], location)
+        end
+      else
+        locations_to_units.keys
       end
     end
 
-    def location_units(location:)
-      locations_to_units[location].flat_map do |unit, qty|
-        Array.new(qty, unit)
+    def units(location: nil)
+      if location
+        locations_to_units[location].flat_map do |unit, qty|
+          Array.new(qty, unit)
+        end
+      else
+        locations_to_units.values.flat_map(&:keys)
       end
     end
 
-    def locations
-      locations_to_units.keys
-    end
+    def include?(arg = nil, location: nil, unit: nil, quantity: 1)
+      if arg
+        if arg.is_a?(Array) || arg.is_a?(Collection)
+          include_collection?(arg)
+        else
+          raise ArgumentError.new("Argument must be a collection (#{arg})")
+        end
 
-    def units
-      locations_to_units.values.flat_map(&:keys)
-    end
+      else
+        if location.nil? && unit.nil?
+          raise ArgumentError.new('Either location or unit must be present')
+        end
 
-    def include_collection?(collection)
-      # http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
-
-      collection.to_a.all? do |entry|
-        location, unit, quantity = entry
-
-        include?(location: location, unit: unit, quantity: quantity)
+        quantity(location: location, unit: unit) >= quantity
       end
     end
 
@@ -84,9 +85,11 @@ module Pigeonhole
     def to_a
       locations_to_units.flat_map do |location, unit_hash|
         unit_hash.map do |unit, quantity|
-          [location, unit, quantity]
+          if quantity > 0
+            [location, unit, quantity]
+          end
         end
-      end
+      end.compact
     end
 
     CollectionError = Class.new(StandardError)
@@ -133,8 +136,16 @@ module Pigeonhole
       raise ArgumentError.new('Cannot add less than 1') if quantity < 1
     end
 
+    def include_collection?(collection)
+      collection.to_a.all? do |entry|
+        location, unit, quantity = entry
+
+        include?(location: location, unit: unit, quantity: quantity)
+      end
+    end
+
     def sum(quantities)
-      quantities.reduce(:+) || 0
+      quantities.reduce(0, :+)
     end
   end
 end
