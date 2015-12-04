@@ -14,7 +14,7 @@ c.quantity(location: 'HERE')                => 3
 c.quantity(unit: '#123', location: 'HERE')  => 2
 c.quantity(unit: '#456', location: 'THERE') => 0
 
-# You can believe in things
+# You can check for existence
 c.include?(unit: '#456')                    => true
 c.include?(unit: '#456', location: 'THERE') => false
 c.include?(unit: '#123', quantity: 6)       => true
