@@ -17,7 +17,7 @@ c.include?(unit: '#456')                    => true
 c.include?(unit: '#456', location: 'THERE') => false
 c.include?(unit: '#123', quantity: 6)       => true
 
-# Sometimes you need a big fat Array.
+# Sometimes you need a big fat Array
 c.locations               => ["HERE", "HERE", "HERE", "THERE", "THERE", "THERE", "THERE", "THERE"] 
 c.locations(unit: '#123') => ["HERE", "HERE", "THERE", "THERE", "THERE", "THERE", "THERE"] 
 
@@ -31,6 +31,6 @@ c.to_a => [["HERE", "#123", 2], ["HERE", "#456", 1], ["THERE", "#123", 5]]
 c2 = Pigeonhole::Collection.new(['THERE', '#123', 5])
 c.include?(c2) => true
 
-# Or Arrays
+# You can compare Arrays
 c.include?(['THERE', '#123', 5]) => true
 ```
