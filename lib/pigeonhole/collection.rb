@@ -98,7 +98,7 @@ module Pigeonhole
       locations_to_units.reduce('') do |memo, (location, units)|
         memo += units.map do |unit, quantity|
           "#{quantity}x #{unit} @#{location}"
-        end
+        end.join(', ')
       end
     end
 

@@ -158,4 +158,12 @@ describe Pigeonhole::Collection do
       end
     end
   end
+
+  describe '#to_s' do
+    subject { described_class.new(complex_creation_array) }
+
+    it 'should work' do
+      expect(subject.to_s.class).to be(String)
+    end
+  end
 end
